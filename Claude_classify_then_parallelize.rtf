@@ -1,0 +1,1376 @@
+{\rtf1\ansi\deff3\adeflang1025
+{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}{\f1\froman\fprq2\fcharset2 Symbol;}{\f2\fswiss\fprq2\fcharset0 Arial;}{\f3\froman\fprq2\fcharset0 Liberation Serif{\*\falt Times New Roman};}{\f4\fmodern\fprq1\fcharset0 Liberation Mono{\*\falt Courier New};}{\f5\fswiss\fprq2\fcharset0 Liberation Sans{\*\falt Arial};}{\f6\fnil\fprq2\fcharset0 Noto Serif CJK SC;}{\f7\fmodern\fprq1\fcharset0 Noto Sans Mono CJK SC;}{\f8\fnil\fprq2\fcharset0 Noto Sans CJK SC;}{\f9\fnil\fprq2\fcharset0 Noto Sans Devanagari;}{\f10\fswiss\fprq0\fcharset128 Noto Sans Devanagari;}}
+{\colortbl;\red0\green0\blue0;\red0\green0\blue255;\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}
+{\stylesheet{\s0\snext0\rtlch\af9\afs24\alang1081 \ltrch\lang1033\langfe2052\hich\af3\loch\widctlpar\hyphpar0\ltrpar\cf0\f3\fs24\lang1033\kerning1\dbch\af6\langfe2052 Normal;}
+{\s2\sbasedon17\snext18\rtlch\af9\afs36\ab \ltrch\hich\af3\loch\ilvl1\outlinelevel1\sb200\sa120\keepn\f3\fs36\b\dbch\af6 Heading 2;}
+{\s3\sbasedon17\snext18\rtlch\af9\afs28\ab \ltrch\hich\af3\loch\ilvl2\outlinelevel2\sb140\sa120\keepn\f3\fs28\b\dbch\af6 Heading 3;}
+{\*\cs15\snext15\rtlch\ab \ltrch\loch\b Strong;}
+{\*\cs16\snext16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7 Source Text;}
+{\s17\sbasedon0\snext18\rtlch\af9\afs28 \ltrch\hich\af5\loch\sb240\sa120\keepn\f5\fs28\dbch\af8 Heading;}
+{\s18\sbasedon0\snext18\loch\sl276\slmult1\sb0\sa140 Body Text;}
+{\s19\sbasedon18\snext19\rtlch\af10 \ltrch\loch\sl276\slmult1\sb0\sa140 List;}
+{\s20\sbasedon0\snext20\rtlch\af10\afs24\ai \ltrch\loch\sb120\sa120\noline\fs24\i Caption;}
+{\s21\sbasedon0\snext21\rtlch\af10 \ltrch\loch\noline Index;}
+{\s22\sbasedon0\snext22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7 Preformatted Text;}
+{\s23\sbasedon0\snext23\loch\nowidctlpar\noline Table Contents;}
+{\s24\sbasedon23\snext24\rtlch\ab \ltrch\loch\qc\nowidctlpar\noline\b Table Heading;}
+}{\*\generator LibreOffice/24.2.7.2$Linux_X86_64 LibreOffice_project/420$Build-2}{\info{\creatim\yr2025\mo11\dy7\hr10\min58}{\revtim\yr2025\mo11\dy7\hr10\min58}{\printim\yr0\mo0\dy0\hr0\min0}}{\*\userprops}\deftab709
+\hyphauto1\viewscale100\formshade\nobrkwrptbl\paperh15840\paperw12240\margl1134\margr1134\margt1134\margb1134\sectd\sbknone\sftnnar\saftnnrlc\sectunlocked1\pgwsxn12240\pghsxn15840\marglsxn1134\margrsxn1134\margtsxn1134\margbsxn1134\ftnbj\ftnstart1\ftnrstcont\ftnnar\aenddoc\aftnrstcont\aftnstart1\aftnnrlc
+{\*\ftnsep\chftnsep}\pgndec\pard\plain \s18\loch\sl276\slmult1\sb0\sa140\sl276\slmult1\ql\sb0\sa140\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Yes! That's much simpler and smarter:}
+\par \pard\plain \s2\rtlch\af9\afs36\ab \ltrch\hich\af3\loch\ilvl1\outlinelevel1\sb200\sa120\keepn\f3\fs36\b\dbch\af6\ql\ltrpar{\loch
+Better Approach: Classify First, Then Parallelize Processing}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from pathlib import Path}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from prefect import task, flow}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from prefect.task_runners import ConcurrentTaskRunner}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 1: Sequential Classification (Fast - just filenames)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+class ClassifierVisitor:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Sequential classification - just looks at filenames (fast)"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def visit_directory(self, directory: Path) -> ClassifiedFiles:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Classify all files by name only (fast operation).}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Returns organized view of what needs processing.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = ClassifiedFiles()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for item in directory.iterdir():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if item.is_file():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+file_type = classify_file(item.name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified.add(item.name, file_type)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return classified}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 2: Parallel Processing (Slow - I/O, extraction, matching)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_flg_file(flg_path: Path) -> None:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Process single FLG file"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing FLG: \{flg_path.name\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+content = flg_path.read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Your FLG logic}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return None}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_err_file(err_path: Path) -> None:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Process single ERR file"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing ERR: \{err_path.name\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+content = err_path.read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Your ERR logic}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return None}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_tar_file(tar_path: Path, appender, classifier: ClassifierVisitor) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Process single tar file:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+1. Read tar}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+2. Classify contents}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+3. Process contents recursively}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing TAR: \{tar_path.name\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+tar_bytes = tar_path.read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Classify tar contents}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = classifier.visit_tar(tar_bytes)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process with strategy}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+strategy = RadarProcessingStrategy(appender, classifier)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries = strategy.process_tar(classified, tar_bytes, [tar_path.name])}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_hdr_batch(hdr_names: list[str], }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                     }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_names: list[str],}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                     }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_names: list[str],}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                     }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+source: Path,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                     }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Process batch of HDR files with matching RDR/MDR.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+This is where the heavy work happens: reading files, matching, parsing.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries = 0}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Build lookup maps}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_map = \{\}}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for rdr_name in rdr_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rep_id = extract_rep_id_from_filename(rdr_name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_map[rep_id] = (source / rdr_name).read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_map = \{\}}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for mdr_name in mdr_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rep_id = extract_rep_id_from_filename(mdr_name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_map[rep_id] = (source / mdr_name).read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process each HDR in batch}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for hdr_name in hdr_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_path = source / hdr_name}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_content = hdr_path.read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Extract radar_rep_ids from HDR}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+radar_rep_ids = extract_radar_rep_ids(hdr_content)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Create entries for each radar_rep_id}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for rep_id in radar_rep_ids:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_content = rdr_map.get(rep_id)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_content = mdr_map.get(rep_id)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entry = create_entry(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_name, hdr_content,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rep_id, rdr_content, mdr_content,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+[]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender.append(entry)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries += 1}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@flow(task_runner=ConcurrentTaskRunner(max_workers=8))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_directory_parallel(directory: Path, appender) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Smart parallel processing:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+1. Classify everything first (sequential, fast)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+2. Parallelize the actual processing (slow I/O work)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 1: Classify (sequential - fast, just filenames)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Classifying directory: \{directory\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classifier = ClassifierVisitor()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = classifier.visit_directory(directory)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Classification complete:")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  FLG files: \{classified.count(FileType.FLG)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  ERR files: \{classified.count(FileType.ERR)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  TAR files: \{classified.count(FileType.TAR)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  HDR files: \{classified.count(FileType.HDR)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  RDR files: \{classified.count(FileType.RDR)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  MDR files: \{classified.count(FileType.MDR)\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 2: Process in parallel (slow I/O work)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures = []}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process FLG files in parallel}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for flg_name in classified.get(FileType.FLG):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_flg_file.submit(directory / flg_name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process ERR files in parallel}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for err_name in classified.get(FileType.ERR):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_err_file.submit(directory / err_name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process TAR files in parallel (most expensive)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for tar_name in classified.get(FileType.TAR):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_tar_file.submit(directory / tar_name, appender, classifier)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process HDR/RDR/MDR in batches (parallel batches)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_names = list(classified.get(FileType.HDR))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_names = list(classified.get(FileType.RDR))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_names = list(classified.get(FileType.MDR))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Divide HDR files into batches for parallel processing}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+batch_size = 50}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_batches = [}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_names[i:i + batch_size]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for i in range(0, len(hdr_names), batch_size)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for hdr_batch in hdr_batches:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_hdr_batch.submit(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_batch, rdr_names, mdr_names, directory, appender}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Wait for all tasks to complete}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+results = [f.result() for f in futures]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Calculate total entries (filter out None from FLG/ERR)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+total_entries = sum(r for r in results if r is not None)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Flush appender}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender.flush()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\nProcessing complete: \{total_entries\} entries")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return total_entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Usage}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def main():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender = BatchAppender(batch_size=100)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+total = process_directory_parallel(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Path("/data/radar"),}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\nTotal: \{total\} entries")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Stats: \{appender.get_stats()\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if __name__ == "__main__":}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+main()}
+\par \pard\plain \s2\rtlch\af9\afs36\ab \ltrch\hich\af3\loch\ilvl1\outlinelevel1\sb200\sa120\keepn\f3\fs36\b\dbch\af6\ql\ltrpar{\loch
+Why This is Better}
+\par \pard\plain \s3\rtlch\af9\afs28\ab \ltrch\hich\af3\loch\ilvl2\outlinelevel2\sb140\sa120\keepn\f3\fs28\b\dbch\af6\ql\ltrpar{\loch
+1. }{\rtlch\ab \ltrch\loch\cs15\rtlch\ab \ltrch\loch\b\b\loch
+Classification is Fast (No Need to Parallelize)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Classification just looks at filenames - super fast}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+import time}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+start = time.time()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classifier = ClassifierVisitor()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = classifier.visit_directory(Path("/data/radar"))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+elapsed = time.time() - start}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Classified 8000 files in \{elapsed:.3f\}s")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Output: Classified 8000 files in 0.045s}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Way faster than the I/O work!}
+\par \pard\plain \s3\rtlch\af9\afs28\ab \ltrch\hich\af3\loch\ilvl2\outlinelevel2\sb140\sa120\keepn\f3\fs28\b\dbch\af6\ql\ltrpar{\loch
+2. }{\rtlch\ab \ltrch\loch\cs15\rtlch\ab \ltrch\loch\b\b\loch
+Processing is Slow (Benefits from Parallelization)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Processing involves:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# - Reading file contents (I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# - Extracting tar files (CPU + I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# - Parsing XML (CPU)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# - Matching files (logic)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# - Writing to database (I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# This is where parallelization helps!}
+\par \pard\plain \s3\rtlch\af9\afs28\ab \ltrch\hich\af3\loch\ilvl2\outlinelevel2\sb140\sa120\keepn\f3\fs28\b\dbch\af6\ql\ltrpar{\loch
+3. }{\rtlch\ab \ltrch\loch\cs15\rtlch\ab \ltrch\loch\b\b\loch
+Simpler Code - No Merge Logic Needed}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# OLD WAY (complex):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 1. Classify batch 1 \u8594\'3f ClassifiedFiles}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 2. Classify batch 2 \u8594\'3f ClassifiedFiles}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 3. Classify batch 3 \u8594\'3f ClassifiedFiles}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 4. Merge all ClassifiedFiles \u8592\'3f Extra complexity!}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 5. Process merged result}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# NEW WAY (simple):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 1. Classify everything \u8594\'3f ClassifiedFiles (fast, sequential)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# 2. Process in parallel using classified results \u8592\'3f Clean!}
+\par \pard\plain \s3\rtlch\af9\afs28\ab \ltrch\hich\af3\loch\ilvl2\outlinelevel2\sb140\sa120\keepn\f3\fs28\b\dbch\af6\ql\ltrpar{\loch
+4. }{\rtlch\ab \ltrch\loch\cs15\rtlch\ab \ltrch\loch\b\b\loch
+Better Task Division}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@flow(task_runner=ConcurrentTaskRunner(max_workers=8))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_directory_smart(directory: Path, appender) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Classification tells us exactly what work to do.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+We can divide work intelligently:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 1: Classify (0.05s for 8000 files)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = ClassifierVisitor().visit_directory(directory)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Step 2: Now we know exactly what we have, divide intelligently:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Small files (FLG, ERR) - process individually}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+flg_futures = [process_flg.submit(f) for f in classified.get(FileType.FLG)]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Large files (TAR) - one task per tar (expensive operation)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+tar_futures = [process_tar.submit(f) for f in classified.get(FileType.TAR)]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Medium files (HDR) - batch them intelligently}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_batches = divide_into_batches(classified.get(FileType.HDR), batch_size=50)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_futures = [process_hdr_batch.submit(b) for b in hdr_batches]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Wait for all}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+all_futures = flg_futures + tar_futures + hdr_futures}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+results = [f.result() for f in all_futures]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return sum(r for r in results if r)}
+\par \pard\plain \s2\rtlch\af9\afs36\ab \ltrch\hich\af3\loch\ilvl1\outlinelevel1\sb200\sa120\keepn\f3\fs36\b\dbch\af6\ql\ltrpar{\loch
+Complete Clean Example}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from pathlib import Path}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from prefect import task, flow}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from prefect.task_runners import ConcurrentTaskRunner}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+from sortedcontainers import SortedSet}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+import tarfile}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+import io}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Sequential Classification (Fast)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+class ClassifierVisitor:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Classify files by examining filenames only"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def visit_directory(self, directory: Path) -> ClassifiedFiles:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Classify directory - just filenames, very fast"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = ClassifiedFiles()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for item in directory.iterdir():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if item.is_file():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+file_type = classify_file(item.name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified.add(item.name, file_type)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return classified}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def visit_tar(self, tar_bytes: bytes) -> ClassifiedFiles:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""Classify tar contents - just member names, fast"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = ClassifiedFiles()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+with tarfile.open(fileobj=io.BytesIO(tar_bytes), mode='r:*') as tar:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for member in tar.getmembers():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if member.isfile():}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+file_type = classify_file(member.name)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified.add(member.name, file_type)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return classified}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Parallel Processing Tasks (Slow I/O work)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_tar_file_task(tar_path: Path, supplies: list[str], }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                          }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender, classifier: ClassifierVisitor) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Process single tar file (expensive operation).}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Each tar gets its own task for parallelization.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing TAR: \{tar_path.name\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Read tar (I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+tar_bytes = tar_path.read_bytes()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Classify contents (fast)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = classifier.visit_tar(tar_bytes)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process recursively (may spawn more tasks for nested tars)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+strategy = RadarProcessingStrategy(appender, classifier)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries = strategy.process_tar(classified, tar_bytes, supplies)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@task}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_hdr_rdr_mdr_batch_task(hdr_names: list[str],}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                                   }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+all_rdr_names: SortedSet,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                                   }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+all_mdr_names: SortedSet,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                                   }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+source: Path,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                                   }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender) -> int:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Process batch of HDR files with their matching RDR/MDR files.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Heavy I/O and matching logic - benefits from parallelization.}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing HDR batch: \{len(hdr_names)\} files")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries = 0}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Build lookup maps for matching (I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_map = build_file_map(all_rdr_names, source)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_map = build_file_map(all_mdr_names, source)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process each HDR in this batch}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for hdr_name in hdr_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_path = source / hdr_name}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_content = hdr_path.read_bytes()  # I/O}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Extract radar_rep_ids}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+radar_rep_ids = extract_radar_rep_ids(hdr_content)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Match and create entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for rep_id in radar_rep_ids:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_content = find_matching_file(rep_id, rdr_map)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_content = find_matching_file(rep_id, mdr_map)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entry = create_entry(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_name, hdr_content,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rep_id, rdr_content, mdr_content,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+[]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender.append(entry)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+entries += 1}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return entries}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Main Flow (Classify First, Then Parallelize)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+@flow(task_runner=ConcurrentTaskRunner(max_workers=8))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+def process_radar_directory(directory: Path) -> dict:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+Process radar directory:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+1. Classify everything (sequential, fast)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+2. Process in parallel (slow I/O)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+"""}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"=" * 60)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing directory: \{directory\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"=" * 60)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Setup}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender = BatchAppender(batch_size=100)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classifier = ClassifierVisitor()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# STEP 1: CLASSIFY (Sequential - just filenames, very fast)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print("\\n[1/3] Classifying files...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classified = classifier.visit_directory(directory)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Classification complete:")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for file_type in FileType:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+count = classified.count(file_type)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if count > 0:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  \{file_type.name\}: \{count\} files")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# STEP 2: PROCESS IN PARALLEL (Slow I/O work)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\n[2/3] Processing files in parallel (max_workers=8)...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures = []}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process FLG files (if needed)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for flg_name in classified.get(FileType.FLG):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Could add FLG processing task here}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+pass}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process ERR files (if needed)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for err_name in classified.get(FileType.ERR):}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Could add ERR processing task here}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+pass}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process TAR files (one task per tar - expensive)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+tar_names = classified.get(FileType.TAR)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  Submitting \{len(tar_names)\} TAR file tasks...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for tar_name in tar_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_tar_file_task.submit(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+directory / tar_name,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+[tar_name],}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+classifier}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Process HDR/RDR/MDR files (batched for efficiency)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_names = list(classified.get(FileType.HDR))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_names = classified.get(FileType.RDR)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_names = classified.get(FileType.MDR)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if hdr_names:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+batch_size = 50}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_batches = [}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+hdr_names[i:i + batch_size]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for i in range(0, len(hdr_names), batch_size)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  Submitting \{len(hdr_batches)\} HDR batch tasks...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+for batch in hdr_batches:}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+future = process_hdr_rdr_mdr_batch_task.submit(}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+batch,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+rdr_names,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+mdr_names,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+directory,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+                }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+            }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+futures.append(future)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Wait for all parallel tasks}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"  Waiting for \{len(futures)\} parallel tasks...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+results = [f.result() for f in futures]}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# STEP 3: FINALIZE}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ========================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\n[3/3] Finalizing...")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Flush appender}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+appender.flush()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Get stats}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+stats = appender.get_stats()}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+total_entries = sum(r for r in results if r is not None)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\n" + "=" * 60)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Processing Complete!")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"=" * 60)}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Total entries processed: \{total_entries\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"Appender stats: \{stats\}")}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+return \{}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+'total_entries': total_entries,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+'classified': classified,}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+        }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+'stats': stats}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+\}}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# Usage}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+# ============================================================================}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar\loch
+
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+if __name__ == "__main__":}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+result = process_radar_directory(Path("/data/radar"))}
+\par \pard\plain \s22\rtlch\af4\afs20 \ltrch\hich\af4\loch\sb0\sa0\f4\fs20\dbch\af7\ql\sb0\sa283\ltrpar{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7
+    }{\loch\cs16\rtlch\af4 \ltrch\hich\af4\loch\f4\dbch\af7\loch
+print(f"\\nFinal result: \{result\}")}
+\par \pard\plain \s2\rtlch\af9\afs36\ab \ltrch\hich\af3\loch\ilvl1\outlinelevel1\sb200\sa120\keepn\f3\fs36\b\dbch\af6\ql\ltrpar{\loch
+Benefits Summary}
+\par \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s24\rtlch\ab \ltrch\loch\qc\nowidctlpar\noline\b\intbl\qc\noline\ltrpar{\loch
+Aspect}\cell\pard\plain \s24\rtlch\ab \ltrch\loch\qc\nowidctlpar\noline\b\intbl\qc\noline\ltrpar{\loch
+Old Way (Parallel Classify)}\cell\pard\plain \s24\rtlch\ab \ltrch\loch\qc\nowidctlpar\noline\b\intbl\qc\noline\ltrpar{\loch
+New Way (Classify First)}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Complexity}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+High (merge logic)}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Low (simple)}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Classification}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Parallel (unnecessary)}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Sequential (fast anyway)}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Processing}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{
+\u9989\'3f }{\loch
+Parallel}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{
+\u9989\'3f }{\loch
+Parallel}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Code clarity}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Complex}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Clean}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Performance}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Same}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+Same}\cell\row\pard \trowd\trql\ltrrow\trpaddft3\trpaddt0\trpaddfl3\trpaddl0\trpaddfb3\trpaddb0\trpaddfr3\trpaddr0\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx1508\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx4421\clpadfl3\clpadl28\clpadft3\clpadt28\clpadfb3\clpadb28\clpadfr3\clpadr28\clvertalc\cellx7138\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Task division}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+By file count}\cell\pard\plain \s23\loch\nowidctlpar\noline\intbl\ql\nowidctlpar\noline\ltrpar{\loch
+By work type}\cell\row\pard \pard\plain \s18\loch\sl276\slmult1\sb0\sa140\ql\ltrpar{\loch\cs15\rtlch\ab \ltrch\loch\b\loch
+Key Insight:}{\loch
+ Classification is ~0.05s for 8000 files (just string ops). Processing is ~10s+ (I/O, extraction). Parallelize the slow part, keep the fast part simple!}
+\par \pard\plain \s0\rtlch\af9\afs24\alang1081 \ltrch\lang1033\langfe2052\hich\af3\loch\widctlpar\hyphpar0\ltrpar\cf0\f3\fs24\lang1033\kerning1\dbch\af6\langfe2052\ql\ltrpar\loch
+
+\par }
